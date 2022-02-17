@@ -1,6 +1,8 @@
 #include "Vcpu.h"
 #include "verilated.h"
 #include "verilated_vcd_c.h"
+#include "Vcpu___024root.h"
+#include <stdio.h>
 
 #define EXEC 8
 
@@ -18,6 +20,7 @@ void exec(int instruction)
       gtkw->dump(clk);
       cpu->clk = !cpu->clk;
       cpu->eval();
+      printf("[Debug] dataout: 0x%x\n", cpu->rootp->cpu__DOT__dataout);
       clk++;
     }
 }
@@ -51,6 +54,7 @@ int main(int argc, char **argv, char **env)
   cpu->trace (gtkw, 99);
   gtkw->open ("cpu.vcd");
   
+  
   exec(0x81); // mov a, 1
   exec(0x15); // ld r5, a
   exec(0x82); // mov a, 2
@@ -82,6 +86,7 @@ int main(int argc, char **argv, char **env)
   exec(0xC0); // xor a, r0
   exec(0xD0); // xnor a, r0
   exec(0xE0); // not a
+  
   end();      // 
   
   if(Verilated::gotFinish())
